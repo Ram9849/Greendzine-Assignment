@@ -1,0 +1,248 @@
+1.Components
+-->ChartComponent.js
+-->Dashboard.js
+-->Login.js
+-->Login.css
+
+2. Data Folder
+-->dashboardData.json
+-->logindata.json
+
+
+import React from "react";
+import { Bar } from "react-chartjs-2";
+import { Chart, registerables, CategoryScale } from 'chart.js';
+Chart.register(...registerables, CategoryScale);
+
+function ChartComponent({ chart }) {
+  const data = {
+    labels: chart.labels,
+    datasets: [
+      {
+        label: "Data",
+        data: chart.data,
+        backgroundColor: "rgba(75,192,192,0.4)"
+      }
+    ]
+  };
+
+  return <Bar data={data} />;
+}
+
+export default ChartComponent;
+
+
+Dashboard.js
+
+import React from "react";
+import ChartComponent from "./ChartComponent";
+import dashboardData from "../data/dashboardData.json";
+import { Chart, registerables, CategoryScale } from 'chart.js';
+Chart.register(...registerables, CategoryScale);
+
+
+function Dashboard() {
+  return (
+    <div className="dashboard-container">
+      <h2>Dashboard</h2>
+      {dashboardData.charts.map((chart) => (
+        <ChartComponent key={chart.id} chart={chart} />
+      ))}
+    </div>
+  );
+}
+
+export default Dashboard;
+
+
+Login.js
+
+import React, { useState } from 'react';
+import './Login.css'; // Import styles from a CSS file
+
+const Login = ({ onLogin }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Validate login credentials
+    if (username === 'Admin' && password === 'GDT') {
+      onLogin();
+    } else {
+      setError('Invalid username or password');
+    }
+  };
+
+  return (
+    <div className="login-container">
+      {/* Image Section */}
+      <div className="login-image">
+        <img
+          src="Software Project\responsive-dashboard\src\components\images\Login.jpeg"
+          alt="Student holding mobile phone"
+          className="student-character"
+        />
+      </div>
+      
+      {/* Form Section */}
+      <div className="login-form">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Login</button>
+          {/* Error Message */}
+          {error && <p className="error-message">{error}</p>}
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
+
+Login.css
+
+/* Login.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 900px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .login-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0f7fa;
+    padding: 20px;
+  }
+  
+  .student-character {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .login-form {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .login-form h2 {
+    margin-bottom: 20px;
+    color: #00796b;
+  }
+  
+  .login-form input {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #b0bec5;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  .login-form button {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    background-color: #00796b;
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-form button:hover {
+    background-color: #004d40;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+
+
+Dashboarddata.json
+
+
+
+
+
+{
+    "charts": [
+      {
+        "id": 1,
+        "type": "bar",
+        "data": [12, 19, 3, 5, 2, 3],
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+      }
+    ]
+  }
+
+
+LoginData.json
+
+{
+    "username": "Admin",
+    "password": "GDT"
+  }
+  
+  App.js
+
+import React from "react";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
